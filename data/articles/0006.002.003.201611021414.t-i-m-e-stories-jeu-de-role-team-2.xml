@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<document>
+	<title><![CDATA[T.I.M.E Stories - jeu de rôle - TEAM 2]]></title>
+	<allow_com>1</allow_com>
+	<template><![CDATA[article.php]]></template>
+	<chapo><![CDATA[]]></chapo>
+	<content><![CDATA["Bienvenue à l’agence T.I.M.E !" 
+____________________________<br>
+Vivez un CODE QUANTUM moderne au travers du temps et de multiples réalités.
+Incarnez des personnages dans ce jeu qui mélange divers aspects du jeu de rôles et du jeu de plateau.
+<br><br>
+<u>Les parties sont sur inscriptions :</u> <br> 4 personnes par Team <br><font color="red"><b>( COMPLET ) </b></font><a href="http://doodle.com/poll/gwiccsgepammn483">Liste des joueurs</a> <br><i>si vous êtes intéressés pour monter une nouvelle Team vous pouvez me contacter par mail : nmarsan@voyageprive.com</i>
+
+<br>
+<table align="right">
+<tr><td>
+<u>Avancement TEAM 1 : </u>
+<ul><li>RUN :  1 </li>
+<li>Unité de Temps :  22 </li>
+<li>Object récupérés : 3 </li>
+<li> Morts : 0 </i></ul>
+</td>
+<td>
+<u>Avancement TEAM 2 : </u>
+<ul><li>RUN :  0 </li>
+<li>Unité de Temps :  0 </li>
+<li>Object récupérés : 0 </li>
+<li> Morts : 0 </i></ul>
+</td></tr></table>]]></content>
+	<tags><![CDATA[4 joueurs]]></tags>
+	<meta_description><![CDATA[]]></meta_description>
+	<meta_keywords><![CDATA[]]></meta_keywords>
+	<title_htmltag><![CDATA[]]></title_htmltag>
+	<thumbnail><![CDATA[data/medias/time-stories.jpg]]></thumbnail>
+	<thumbnail_alt><![CDATA[]]></thumbnail_alt>
+	<thumbnail_title><![CDATA[]]></thumbnail_title>
+	<date_creation><![CDATA[201611091417]]></date_creation>
+	<date_update><![CDATA[201611031627]]></date_update>
+</document>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<user number="001" active="1" profil="0" delete="0">
+		<login><![CDATA[admin]]></login>
+		<name><![CDATA[admin]]></name>
+		<infos><![CDATA[]]></infos>
+		<password><![CDATA[648b71b4c06e10a745d0c328cce2c0f4c061386a]]></password>
+		<salt><![CDATA[mSRGEtPN8A]]></salt>
+		<email><![CDATA[]]></email>
+		<lang><![CDATA[fr]]></lang>
+	</user>
+	<user number="002" active="1" profil="0" delete="1">
+		<login><![CDATA[hydris]]></login>
+		<name><![CDATA[hydris]]></name>
+		<infos><![CDATA[]]></infos>
+		<password><![CDATA[ce3674c6116228db550ef90b0cd23211ad9a819b]]></password>
+		<salt><![CDATA[fLYLUJGfDn]]></salt>
+		<email><![CDATA[]]></email>
+		<lang><![CDATA[fr]]></lang>
+	</user>
+	<user number="003" active="1" profil="0" delete="0">
+		<login><![CDATA[nmarsan]]></login>
+		<name><![CDATA[Nathalie Marsan]]></name>
+		<infos><![CDATA[]]></infos>
+		<password><![CDATA[d2823a624201dc147c23c62b9384afa60e0d21fb]]></password>
+		<salt><![CDATA[48wEUSBMly]]></salt>
+		<email><![CDATA[]]></email>
+		<lang><![CDATA[fr]]></lang>
+	</user>
+</document>
