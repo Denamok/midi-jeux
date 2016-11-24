@@ -15,17 +15,19 @@ Incarnez des personnages dans ce jeu qui mélange divers aspects du jeu de rôle
 <table align="right">
 <tr><td>
 <u>Avancement TEAM 1 : </u>
-<ul><li>RUN :  1 </li>
-<li>Unité de Temps :  22 </li>
-<li>Object récupérés : 3 </li>
-<li> Morts : 0 </i></ul>
+<ul><li>RUN :  2 </li>
+<li>Unité de Temps restant :  14 </li>
+<li>Object récupérés : 8 </li>
+<li>Lieux visités : 6 </li>
+<li> Joueurs éliminés : 1 </i></ul>
 </td>
 <td>
 <u>Avancement TEAM 2 : </u>
 <ul><li>RUN :  0 </li>
-<li>Unité de Temps :  0 </li>
+<li>Unité de Temps restant :  25 </li>
 <li>Object récupérés : 0 </li>
-<li> Morts : 0 </i></ul>
+<li>Lieux visités : 0 </li>
+<li> Joueurs éliminés : 0 </i></ul>
 </td></tr></table>]]></content>
 	<tags><![CDATA[4 joueurs]]></tags>
 	<meta_description><![CDATA[]]></meta_description>
@@ -35,5 +37,5 @@ Incarnez des personnages dans ce jeu qui mélange divers aspects du jeu de rôle
 	<thumbnail_alt><![CDATA[]]></thumbnail_alt>
 	<thumbnail_title><![CDATA[]]></thumbnail_title>
 	<date_creation><![CDATA[201611091417]]></date_creation>
-	<date_update><![CDATA[201611031627]]></date_update>
+	<date_update><![CDATA[201611081418]]></date_update>
 </document>
