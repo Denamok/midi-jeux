@@ -917,3 +917,7 @@ div.form fieldset{margin:0;padding:0;background:transparent;border:0;}
  float:left; 
  margin-right:20px;
 }
+
+.block-bookmarks {
+ margin-bottom:30px;
+}

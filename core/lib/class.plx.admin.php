@@ -538,6 +538,119 @@ RewriteRule ^feed\/(.*)$ feed.php?$1 [L]
 	}
 
 	/**
+	 * Méthode qui édite le fichier XML des types selon le tableau $content
+	 *
+	 * @param	content	tableau multidimensionnel des types
+	 * @param	action	permet de forcer la mise àjour du fichier
+	 * @return	string
+	 * @author	Mok
+	 **/
+	public function editTypes($content, $action=false) {
+$poney="";
+		$save = $this->aTypes;
+
+		# suppression
+		if(!empty($content['selection']) AND $content['selection']=='delete' AND isset($content['idCategory'])) {
+			foreach($content['idCategory'] as $cat_id) {
+				unset($this->aTypes[$cat_id]);
+				$action = true;
+			}
+		}
+		# ajout nouvelle catégorie à partir de la page article
+		elseif(!empty($content['new_category'])) {
+			$cat_name = $content['new_catname'];
+			if($cat_name!='') {
+				$cat_id = $this->nextIdCategory();
+				$this->aTypes[$cat_id]['name'] = $cat_name;
+				$this->aTypes[$cat_id]['url'] = plxUtils::title2url($cat_name);
+				$this->aTypes[$cat_id]['tri'] = $this->aConf['tri'];
+				$this->aTypes[$cat_id]['bypage'] = $this->aConf['bypage'];
+				$this->aTypes[$cat_id]['menu'] = 'oui';
+				$this->aTypes[$cat_id]['active'] = 1;
+				$this->aTypes[$cat_id]['homepage'] = 1;
+				$this->aTypes[$cat_id]['description'] = '';
+				$this->aTypes[$cat_id]['template'] = 'categorie.php';
+				$this->aTypes[$cat_id]['title_htmltag'] = '';
+				$this->aTypes[$cat_id]['meta_description'] = '';
+				$this->aTypes[$cat_id]['meta_keywords'] = '';
+				# Hook plugins
+				eval($this->plxPlugins->callHook('plxAdminEditCategoriesNew'));
+				$action = true;
+			}
+		}
+		# mise à jour de la liste des catégories
+		elseif(!empty($content['update'])) {
+			foreach($content['catNum'] as $cat_id) {
+				$cat_name = $content[$cat_id.'_name'];
+				if($cat_name!='') {
+					$cat_url = (isset($content[$cat_id.'_url'])?trim($content[$cat_id.'_url']):'');
+					$cat_url = ($cat_url!='' ? plxUtils::title2url($cat_url) : plxUtils::title2url($cat_name));
+					if($cat_url=='') $cat_url = L_DEFAULT_NEW_CATEGORY_URL;
+					$this->aTypes[$cat_id]['name'] = $cat_name;
+					$this->aTypes[$cat_id]['url'] = $cat_url;
+					$this->aTypes[$cat_id]['tri'] = $content[$cat_id.'_tri'];
+					$this->aTypes[$cat_id]['bypage'] = intval($content[$cat_id.'_bypage']);
+					$this->aTypes[$cat_id]['menu'] = $content[$cat_id.'_menu'];
+					$this->aTypes[$cat_id]['active'] = $content[$cat_id.'_active'];
+					$this->aTypes[$cat_id]['ordre'] = intval($content[$cat_id.'_ordre']);
+					$this->aTypes[$cat_id]['homepage'] = (isset($this->aTypes[$cat_id]['homepage'])?$this->aTypes[$cat_id]['homepage']:1);
+					$this->aTypes[$cat_id]['description'] = (isset($this->aTypes[$cat_id]['description'])?$this->aTypes[$cat_id]['description']:'');
+					$this->aTypes[$cat_id]['template'] = (isset($this->aTypes[$cat_id]['template'])?$this->aTypes[$cat_id]['template']:'categorie.php');
+					$this->aTypes[$cat_id]['title_htmltag'] = (isset($this->aTypes[$cat_id]['title_htmltag'])?$this->aTypes[$cat_id]['title_htmltag']:'');
+					$this->aTypes[$cat_id]['meta_description'] = (isset($this->aTypes[$cat_id]['meta_description'])?$this->aTypes[$cat_id]['meta_description']:'');
+					$this->aTypes[$cat_id]['meta_keywords'] = (isset($this->aTypes[$cat_id]['meta_keywords'])?$this->aTypes[$cat_id]['meta_keywords']:'');
+					# Hook plugins
+					eval($this->plxPlugins->callHook('plxAdminEditCategoriesUpdate'));
+					$action = true;
+				}
+			}
+			# On va trier les clés selon l'ordre choisi
+			if(sizeof($this->aTypes)>0) uasort($this->aTypes, create_function('$a, $b', 'return $a["ordre"]>$b["ordre"];'));
+		}
+		# sauvegarde
+		if($action) {
+			$cats_name = array();
+			$cats_url = array();
+			# On génére le fichier XML
+			$xml = "<?xml version=\"1.0\" encoding=\"".PLX_CHARSET."\"?>\n";
+			$xml .= "<document>\n";
+			foreach($this->aTypes as $cat_id => $cat) {
+
+				# control de l'unicité du nom de la categorie
+				if(in_array($cat['name'], $cats_name)) {
+					$this->aTypes = $save;
+					return plxMsg::Error(L_ERR_CATEGORY_ALREADY_EXISTS.' : '.plxUtils::strCheck($cat['name']));
+				}
+				else
+					$cats_name[] = $cat['name'];
+
+				# control de l'unicité de l'url de la catégorie
+				if(in_array($cat['url'], $cats_url))
+					return plxMsg::Error(L_ERR_URL_ALREADY_EXISTS.' : '.plxUtils::strCheck($cat['url']));
+				else
+					$cats_url[] = $cat['url'];
+
+				$xml .= "\t<categorie number=\"".$cat_id."\" active=\"".$cat['active']."\" homepage=\"".$cat['homepage']."\" tri=\"".$cat['tri']."\" bypage=\"".$cat['bypage']."\" menu=\"".$cat['menu']."\" url=\"".$cat['url']."\" template=\"".basename($cat['template'])."\">";
+				$xml .= "<name><![CDATA[".plxUtils::cdataCheck($cat['name'])."]]></name>";
+				$xml .= "<description><![CDATA[".plxUtils::cdataCheck($cat['description'])."]]></description>";
+				$xml .= "<meta_description><![CDATA[".plxUtils::cdataCheck($cat['meta_description'])."]]></meta_description>";
+				$xml .= "<meta_keywords><![CDATA[".plxUtils::cdataCheck($cat['meta_keywords'])."]]></meta_keywords>";
+				$xml .= "<title_htmltag><![CDATA[".plxUtils::cdataCheck($cat['title_htmltag'])."]]></title_htmltag>";
+				eval($this->plxPlugins->callHook('plxAdminEditTypesXml'));
+				$xml .= "</categorie>\n";
+			}
+			$xml .= "</document>";
+			# On écrit le fichier
+			if(plxUtils::write($xml,path('XMLFILE_TYPES')))
+				return plxMsg::Info(L_SAVE_SUCCESSFUL . '==>' . $poney);
+			else {
+				$this->aTypes = $save;
+				return plxMsg::Error(L_SAVE_ERR.' '.path('XMLFILE_TYPES'));
+			}
+		}
+	}
+
+	/**
 	 * Méthode qui sauvegarde le contenu des options d'une catégorie
 	 *
 	 * @param	content	données à sauvegarder
@@ -555,6 +668,26 @@ RewriteRule ^feed\/(.*)$ feed.php?$1 [L]
 		# Hook plugins
 		eval($this->plxPlugins->callHook('plxAdminEditCategorie'));
 		return $this->editCategories(null,true);
+	}
+
+	/**
+	 * Méthode qui sauvegarde le contenu des options d'un type
+	 *
+	 * @param	content	données à sauvegarder
+	 * @return	string
+	 * @author	Mok
+	 **/
+	public function editType($content) {
+		# Mise à jour du fichier types.xml
+		$this->aTypes[$content['id']]['homepage'] = intval($content['homepage']);
+		$this->aTypes[$content['id']]['description'] = trim($content['content']);
+		$this->aTypes[$content['id']]['template'] = $content['template'];
+		$this->aTypes[$content['id']]['title_htmltag'] = trim($content['title_htmltag']);
+		$this->aTypes[$content['id']]['meta_description'] = trim($content['meta_description']);
+		$this->aTypes[$content['id']]['meta_keywords'] = trim($content['meta_keywords']);
+		# Hook plugins
+		eval($this->plxPlugins->callHook('plxAdminEditType'));
+		return $this->editTypes(null,true);
 	}
 
 	/**
@@ -811,7 +944,8 @@ RewriteRule ^feed\/(.*)$ feed.php?$1 [L]
 		$time = $content['date_publication_year'].$content['date_publication_month'].$content['date_publication_day'].substr(str_replace(':','',$content['date_publication_time']),0,4);
 		if(!preg_match('/^[0-9]{12}$/',$time)) $time = date('YmdHi'); # Check de la date au cas ou...
 		if(empty($content['catId'])) $content['catId']=array('000'); # Catégorie non classée
-		$filename = PLX_ROOT.$this->aConf['racine_articles'].$id.'.'.implode(',', $content['catId']).'.'.trim($content['author']).'.'.$time.'.'.$content['url'].'.xml';
+		if(empty($content['typId'])) $content['typId']=array('000'); # Type non classé
+		$filename = PLX_ROOT.$this->aConf['racine_articles'].$id.'.'.implode(',', $content['catId']).'.'.implode(',', $content['typId']).'.'.trim($content['author']).'.'.$time.'.'.$content['url'].'.xml';
 		# On va mettre à jour notre fichier
 		if(plxUtils::write($xml,$filename)) {
 			# suppression ancien fichier si nécessaire

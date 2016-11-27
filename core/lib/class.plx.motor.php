@@ -25,8 +25,13 @@ class plxMotor {
 	public $homepageCats = false; # Liste des categories à afficher sur la page d'accueil sous la forme 001|002|003 etc
 	public $activeArts = array(); # Tableaux des articles appartenant aux catégories actives
 
+	public $activeTypes = false; # Liste des types actifs sous la forme 001|002|003 etc
+	public $homepageTypes = false; # Liste des types à afficher sur la page d'accueil sous la forme 001|002|003 etc
+	public $activeTypesArts = array(); # Tableaux des articles appartenant aux types actifs
+
 	public $aConf = array(); # Tableau de configuration
 	public $aCats = array(); # Tableau de toutes les catégories
+	public $aTypes = array(); # Tableau de tous les types
 	public $aStats = array(); # Tableau de toutes les pages statiques
 	public $aTags = array(); # Tableau des tags
 	public $aUsers = array(); #Tableau des utilisateurs
@@ -99,6 +104,7 @@ class plxMotor {
 		$this->plxGlob_coms = plxGlob::getInstance(PLX_ROOT.$this->aConf['racine_commentaires']);
 		# Récupération des données dans les autres fichiers xml
 		$this->getCategories(path('XMLFILE_CATEGORIES'));
+		$this->getTypes(path('XMLFILE_TYPES'));
 		$this->getStatiques(path('XMLFILE_STATICS'));
 		$this->getTags(path('XMLFILE_TAGS'));
 		$this->getUsers(path('XMLFILE_USERS'));
@@ -131,17 +137,17 @@ class plxMotor {
 			$this->template = $this->aConf['hometemplate'];
 			$this->bypage = $this->aConf['bypage']; # Nombre d'article par page
 			# On regarde si on a des articles en mode "home"
-			if($this->plxGlob_arts->query('/^[0-9]{4}.(home[0-9,]*).[0-9]{3}.[0-9]{12}.[a-z0-9-]+.xml$/')) {
-				$this->motif = '/^[0-9]{4}.(home[0-9,]*).[0-9]{3}.[0-9]{12}.[a-z0-9-]+.xml$/';
+			if($this->plxGlob_arts->query('/^[0-9]{4}.(home[0-9,]*).[0-9]{3}.[0-9]{3}.[0-9]{12}.[a-z0-9-]+.xml$/')) {
+				$this->motif = '/^[0-9]{4}.(home[0-9,]*).[0-9]{3}.[0-9]{3}.[0-9]{12}.[a-z0-9-]+.xml$/';
 			} else { # Sinon on recupere tous les articles
-				$this->motif = '/^[0-9]{4}.(?:[0-9]|,)*(?:'.$this->homepageCats.')(?:[0-9]|,)*.[0-9]{3}.[0-9]{12}.[a-z0-9-]+.xml$/';
+				$this->motif = '/^[0-9]{4}.(?:[0-9]|,)*(?:'.$this->homepageCats.')(?:[0-9]|,)*.[0-9]{3}.[0-9]{3}.[0-9]{12}.[a-z0-9-]+.xml$/';
 			}
 		}
 		elseif($this->get AND preg_match('/^article([0-9]+)\/?([a-z0-9-]+)?/',$this->get,$capture)) {
 			$this->mode = 'article'; # Mode article
 			$this->template = 'article.php';
 			$this->cible = str_pad($capture[1],4,'0',STR_PAD_LEFT); # On complete sur 4 caracteres
-			$this->motif = '/^'.$this->cible.'.((?:[0-9]|home|,)*(?:'.$this->activeCats.'|home)(?:[0-9]|home|,)*).[0-9]{3}.[0-9]{12}.[a-z0-9-]+.xml$/'; # Motif de recherche
+			$this->motif = '/^'.$this->cible.'.((?:[0-9]|home|,)*(?:'.$this->activeCats.'|home)(?:[0-9]|home|,)*).[0-9]{3}.[0-9]{3}.[0-9]{12}.[a-z0-9-]+.xml$/'; # Motif de recherche
 			if($this->getArticles()) {
 				# Redirection 301
 				if($this->plxRecord_arts->f('url')!=$capture[2]) {
@@ -179,7 +185,7 @@ class plxMotor {
 			$this->cible = str_pad($capture[1],3,'0',STR_PAD_LEFT); # On complete sur 3 caracteres
 			if(!empty($this->aCats[$this->cible]) AND $this->aCats[$this->cible]['active'] AND $this->aCats[$this->cible]['url']==$capture[2]) {
 				$this->mode = 'categorie'; # Mode categorie
-				$this->motif = '/^[0-9]{4}.(?:[0-9]|home|,)*(?:'.$this->cible.')(?:[0-9]|home|,)*.[0-9]{3}.[0-9]{12}.[a-z0-9-]+.xml$/'; # Motif de recherche
+				$this->motif = '/^[0-9]{4}.(?:[0-9]|home|,)*(?:'.$this->cible.')(?:[0-9]|home|,)*.[0-9]{3}.[0-9]{3}.[0-9]{12}.[a-z0-9-]+.xml$/'; # Motif de recherche
 				$this->template = $this->aCats[$this->cible]['template'];
 				$this->tri = $this->aCats[$this->cible]['tri']; # Recuperation du tri des articles
 				$this->bypage = $this->aCats[$this->cible]['bypage'] > 0 ? $this->aCats[$this->cible]['bypage'] : $this->bypage;
@@ -194,6 +200,25 @@ class plxMotor {
 				$this->error404(L_UNKNOWN_CATEGORY);
 			}
 		}
+		elseif($this->get AND preg_match('/^type([0-9]+)\/?([a-z0-9-]+)?/',$this->get,$capture)) {
+			$this->cible = str_pad($capture[1],3,'0',STR_PAD_LEFT); # On complete sur 3 caracteres
+			if(!empty($this->aTypes[$this->cible]) AND $this->aTypes[$this->cible]['active'] AND $this->aTypes[$this->cible]['url']==$capture[2]) {
+				$this->mode = 'type'; # Mode categorie
+				$this->motif = '/^[0-9]{4}.(?:[0-9]|home|,)*(?:'.$this->activeCats.'|home)(?:[0-9]|home|,)*.'.$this->cible.'.[0-9]{3}.[0-9]{12}.[a-z0-9-]+.xml$/'; # Motif de recherche
+				$this->template = $this->aTypes[$this->cible]['template'];
+				$this->tri = $this->aTypes[$this->cible]['tri']; # Recuperation du tri des articles
+				$this->bypage = $this->aTypes[$this->cible]['bypage'] > 0 ? $this->aTypes[$this->cible]['bypage'] : $this->bypage;
+			}
+			elseif(isset($this->aTypes[$this->cible])) { # Redirection 301
+				if($this->aTypes[$this->cible]['url']!=$capture[2]) {
+					header('Status: 301 Moved Permanently', false, 301);
+					header('Location: '.$this->urlRewrite('?type'.intval($this->cible).'/'.$this->aCats[$this->cible]['url']));
+					exit();
+				}
+			} else {
+				$this->error404(L_UNKNOWN_TYPE);
+			}
+		}
 		elseif($this->get AND preg_match('/^archives\/([0-9]{4})[\/]?([0-9]{2})?[\/]?([0-9]{2})?/',$this->get,$capture)) {
 			$this->mode = 'archives';
 			$this->template = 'archives.php';
@@ -203,7 +228,7 @@ class plxMotor {
 			else $search .= '[0-9]{2}';
 			if(!empty($capture[3])) $search .= $capture[3];
 			else $search .= '[0-9]{2}';
-			$this->motif = '/^[0-9]{4}.(?:[0-9]|home|,)*(?:'.$this->activeCats.'|home)(?:[0-9]|home|,)*.[0-9]{3}.'.$search.'[0-9]{4}.[a-z0-9-]+.xml$/';
+			$this->motif = '/^[0-9]{4}.(?:[0-9]|home|,)*(?:'.$this->activeCats.'|home)(?:[0-9]|home|,)*.[0-9]{3}.[0-9]{3}.'.$search.'[0-9]{4}.[a-z0-9-]+.xml$/';
 		}
 		elseif($this->get AND preg_match('/^tag\/([a-z0-9-]+)/',$this->get,$capture)) {
 			$this->cible = $capture[1];
@@ -225,7 +250,7 @@ class plxMotor {
 			if(sizeof($ids)>0) {
 				$this->mode = 'tags'; # Affichage en mode home
 				$this->template = 'tags.php';
-				$this->motif = '/('.implode('|', $ids).').(?:[0-9]|home|,)*(?:'.$this->activeCats.'|home)(?:[0-9]|home|,)*.[0-9]{3}.[0-9]{12}.[a-z0-9-]+.xml$/';
+				$this->motif = '/('.implode('|', $ids).').(?:[0-9]|home|,)*(?:'.$this->activeCats.'|home)(?:[0-9]|home|,)*.[0-9]{3}.[0-9]{3}.[0-9]{12}.[a-z0-9-]+.xml$/';
 				$this->bypage = $this->aConf['bypage']; # Nombre d'article par page
 			} else {
 				$this->error404(L_ARTICLE_NO_TAG);
@@ -279,6 +304,12 @@ class plxMotor {
 			$this->getPage(); # Recuperation du numéro de la page courante
 			if(!$this->getArticles()) { # Si aucun article
 				$this->error404(L_NO_ARTICLE_PAGE);
+			}
+		}
+		elseif($this->mode == 'type') {
+			$this->getPage(); # Recuperation du numéro de la page courante
+			if(!$this->getArticles()) { # Si aucun article
+				$this->error404(L_NO_COMING_PAGE);
 			}
 		}
 		elseif($this->mode == 'article') {
@@ -449,6 +480,84 @@ class plxMotor {
 	}
 
 	/**
+	 * Méthode qui parse le fichier des types et alimente
+	 * le tableau aTypes
+	 *
+	 * @param	filename	emplacement du fichier XML des types
+	 * @return	null
+	 * @author	Mok
+	 **/
+	public function getTypes($filename) {
+
+		if(!is_file($filename)) return;
+
+		$activeTypes = array();
+		$homepageTypes = array();
+
+		# Mise en place du parseur XML
+		$data = implode('',file($filename));
+		$parser = xml_parser_create(PLX_CHARSET);
+		xml_parser_set_option($parser,XML_OPTION_CASE_FOLDING,0);
+		xml_parser_set_option($parser,XML_OPTION_SKIP_WHITE,0);
+		xml_parse_into_struct($parser,$data,$values,$iTags);
+		xml_parser_free($parser);
+		if(isset($iTags['categorie']) AND isset($iTags['name'])) {
+			$nb = sizeof($iTags['name']);
+			$size=ceil(sizeof($iTags['categorie'])/$nb);
+			for($i=0;$i<$nb;$i++) {
+				$attributes = $values[$iTags['categorie'][$i*$size]]['attributes'];
+				$number = $attributes['number'];
+				# Recuperation du nom de la catégorie
+				$this->aTypes[$number]['name']=plxUtils::getValue($values[$iTags['name'][$i]]['value']);
+				# Recuperation du nom de la description
+				$this->aTypes[$number]['description']=plxUtils::getValue($values[$iTags['description'][$i]]['value']);
+				# Recuperation de la balise title
+				$title_htmltag = plxUtils::getValue($iTags['title_htmltag'][$i]);
+				$this->aTypes[$number]['title_htmltag']=plxUtils::getValue($values[$title_htmltag]['value']);
+				# Recuperation du meta description
+				$meta_description = plxUtils::getValue($iTags['meta_description'][$i]);
+				$this->aTypes[$number]['meta_description']=plxUtils::getValue($values[$meta_description]['value']);
+				# Recuperation du meta keywords
+				$meta_keywords = plxUtils::getValue($iTags['meta_keywords'][$i]);
+				$this->aTypes[$number]['meta_keywords']=plxUtils::getValue($values[$meta_keywords]['value']);
+				# Recuperation de l'url de la categorie
+				$this->aTypes[$number]['url']=strtolower($attributes['url']);
+				# Recuperation du tri de la categorie si besoin est
+				$this->aTypes[$number]['tri']=isset($attributes['tri'])?$attributes['tri']:$this->aConf['tri'];
+				# Recuperation du nb d'articles par page de la categorie si besoin est
+				$this->aTypes[$number]['bypage']=isset($attributes['bypage'])?$attributes['bypage']:$this->bypage;
+				# Recuperation du fichier template
+				$this->aTypes[$number]['template']=isset($attributes['template'])?$attributes['template']:'type.php';
+				# Récuperation état affichage de la catégorie dans le menu
+				$this->aTypes[$number]['menu']=isset($attributes['menu'])?$attributes['menu']:'oui';
+				# Récuperation état activation de la catégorie dans le menu
+				$this->aTypes[$number]['active']=isset($attributes['active'])?$attributes['active']:'1';
+				if($this->aTypes[$number]['active']) $activeTypes[]=$number;
+				# Recuperation affichage en page d'accueil
+				$this->aTypes[$number]['homepage'] = isset($attributes['homepage']) ? $attributes['homepage'] : 1;
+				$this->aTypes[$number]['homepage'] = in_array($this->aTypes[$number]['homepage'],array('0','1')) ? $this->aTypes[$number]['homepage'] : 1;
+				if($this->aTypes[$number]['active'] AND $this->aTypes[$number]['homepage']) $homepageCats[]=$number;
+				# Recuperation du nombre d'article de la categorie
+				$motif = '/^[0-9]{4}.[home,|0-9,]*.' . $number . '.[0-9]{3}.[0-9]{12}.[A-Za-z0-9-]+.xml$/';
+				$arts = $this->plxGlob_arts->query($motif,'art','',0,false,'before');
+				$this->aTypes[$number]['articles'] = ($arts?sizeof($arts):0);
+				$coming=0;
+                        	foreach($arts as $k=>$v){ # On parcourt tous les fichiers
+                                	$art = $this->parseArticle(PLX_ROOT.$this->aConf['racine_articles'].$v);
+                                       	if ($art['date_creation'] >= date('YmdHi')) $coming++;
+                        	}
+				$this->aTypes[$number]['coming'] = $coming;
+
+				# Hook plugins
+				eval($this->plxPlugins->callHook('plxMotorGetTypes'));
+			}
+		}
+		$homepageTypes [] = '000'; # on rajoute le type 'Non classé'
+		$this->homepageTypes = implode('|', $homepageTypes);
+		$this->activeTypes = implode('|', $activeTypes);
+	}
+
+	/**
 	 * Méthode qui parse le fichier des pages statiques et alimente
 	 * le tableau aStats
 	 *
@@ -605,11 +714,17 @@ class plxMotor {
 		# On recupere nos fichiers (tries) selon le motif, la pagination, la date de publication
 		if($aFiles = $this->plxGlob_arts->query($this->motif,'art',$ordre,$start,$this->bypage,$publi)) {
 			# on mémorise le nombre total d'articles trouvés
-			foreach($aFiles as $k=>$v) # On parcourt tous les fichiers
-				$array[$k] = $this->parseArticle(PLX_ROOT.$this->aConf['racine_articles'].$v);
+			foreach($aFiles as $k=>$v){ # On parcourt tous les fichiers
+				$art = $this->parseArticle(PLX_ROOT.$this->aConf['racine_articles'].$v);
+				if ($this->mode == 'type'){
+					if ($art['date_creation'] < date('YmdHi')) continue;
+				}
+				$array[$k] = $art;
+			}
 			# On stocke les enregistrements dans un objet plxRecord
 			$this->plxRecord_arts = new plxRecord($array);
-			return true;
+			if (sizeof($array)) return true;
+			else return false;
 		}
 		else return false;
 	}
@@ -625,13 +740,14 @@ class plxMotor {
 	public function artInfoFromFilename($filename) {
 
 		# On effectue notre capture d'informations
-		if(preg_match('/(_?[0-9]{4}).([0-9,|home|draft]*).([0-9]{3}).([0-9]{12}).([a-z0-9-]+).xml$/',$filename,$capture)) {
+		if(preg_match('/(_?[0-9]{4}).([0-9,|home|draft]*).([0-9,|home|draft]*).([0-9]{3}).([0-9]{12}).([a-z0-9-]+).xml$/',$filename,$capture)) {
 			return array(
 				'artId'		=> $capture[1],
 				'catId'		=> $capture[2],
-				'usrId'		=> $capture[3],
-				'artDate'	=> $capture[4],
-				'artUrl'	=> $capture[5]
+				'typId'		=> $capture[3],
+				'usrId'		=> $capture[4],
+				'artDate'	=> $capture[5],
+				'artUrl'	=> $capture[6]
 			);
 		}
 	}
@@ -673,6 +789,7 @@ class plxMotor {
 		$art['numero'] = $tmp['artId'];
 		$art['author'] = $tmp['usrId'];
 		$art['categorie'] = $tmp['catId'];
+		$art['type'] = $tmp['typId'];
 		$art['url'] = $tmp['artUrl'];
 		$art['date'] = $tmp['artDate'];
 		$art['nb_com'] = $this->getNbCommentaires('/^'.$art['numero'].'.[0-9]{10}.[0-9]+.xml$/');

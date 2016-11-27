@@ -9,6 +9,7 @@
 
 include(dirname(__FILE__).'/prepend.php');
 
+
 # Control du token du formulaire
 if(!isset($_POST['preview']))
 	plxToken::validateFormToken($_POST);
@@ -23,19 +24,25 @@ if(isset($_GET['a']) AND !preg_match('/^_?[0-9]{4}$/',$_GET['a'])) {
 	exit;
 }
 
+
 # Formulaire validé
 if(!empty($_POST)) { # Création, mise à jour, suppression ou aperçu
 
 	if(!isset($_POST['catId'])) $_POST['catId']=array();
+	if(!isset($_POST['typId'])) $_POST['typId']=array();
 	# Titre par défaut si titre vide
 	if(trim($_POST['title'])=='') $_POST['title'] = L_DEFAULT_NEW_ARTICLE_TITLE;
 	# Si demande d'enregistrement en brouillon on ajoute la categorie draft à la liste et on retire la demande de validation
 	if(isset($_POST['draft']) AND !in_array('draft',$_POST['catId'])) array_unshift($_POST['catId'], 'draft');
+	if(isset($_POST['draft']) AND !in_array('draft',$_POST['typId'])) array_unshift($_POST['typId'], 'draft');
 	# si aucune catégorie sélectionnée on place l'article dans la catégorie "non classé"
 	if(sizeof($_POST['catId'])==1 AND $_POST['catId'][0]=='draft') $_POST['catId'][]='000';
 	else $_POST['catId'] = array_filter($_POST['catId'], create_function('$a', 'return $a!="000";'));
+	if(sizeof($_POST['typId'])==1 AND $_POST['typId'][0]=='draft') $_POST['typId'][]='000';
+	else $_POST['typId'] = array_filter($_POST['typId'], create_function('$a', 'return $a!="000";'));
 	# Si demande de publication ou demande de validation, on supprime la catégorie draft si elle existe
 	if((isset($_POST['update']) OR isset($_POST['publish']) OR isset($_POST['moderate'])) AND isset($_POST['catId'])) $_POST['catId'] = array_filter($_POST['catId'], create_function('$a', 'return $a!="draft";'));
+	if((isset($_POST['update']) OR isset($_POST['publish']) OR isset($_POST['moderate'])) AND isset($_POST['typId'])) $_POST['typId'] = array_filter($_POST['typId'], create_function('$a', 'return $a!="draft";'));
 	# Si profil PROFIL_WRITER on vérifie l'id du rédacteur connecté et celui de l'article
 	if($_SESSION['profil']==PROFIL_WRITER AND isset($_POST['author']) AND $_SESSION['user']!=$_POST['author']) $_POST['author']=$_SESSION['user'];
 	# Si profil PROFIL_WRITER on vérifie que l'article n'est pas celui d'un autre utilisateur
@@ -66,12 +73,20 @@ if(!empty($_POST)) { # Création, mise à jour, suppression ou aperçu
 		$art['thumbnail_title'] = $_POST['thumbnail_title'];
 		$art['thumbnail_alt'] = $_POST['thumbnail_alt'];
 		$art['categorie'] = '';
+		$art['type'] = '';
 		if(!empty($_POST['catId'])) {
 			$array=array();
 			foreach($_POST['catId'] as $k => $v) {
 				if($v!='draft') $array[]=$v;
 			}
 			$art['categorie']=implode(',',$array);
+		}
+		if(!empty($_POST['typId'])) {
+			$array=array();
+			foreach($_POST['typId'] as $k => $v) {
+				if($v!='draft') $array[]=$v;
+			}
+			$art['type']=implode(',',$array);
 		}
 		$art['date'] = $_POST['date_publication_year'].$_POST['date_publication_month'].$_POST['date_publication_day'].substr(str_replace(':','',$_POST['date_publication_time']),0,4);
 		$art['date_creation'] = $_POST['date_creation_year'].$_POST['date_creation_month'].$_POST['date_creation_day'].substr(str_replace(':','',$_POST['date_creation_time']),0,4);
@@ -104,7 +119,7 @@ if(!empty($_POST)) { # Création, mise à jour, suppression ou aperçu
 		# Vérification de l'unicité de l'url
 		$_POST['url'] = plxUtils::title2url(trim($_POST['url'])==''?$_POST['title']:$_POST['url']);
 		foreach($plxAdmin->plxGlob_arts->aFiles as $numart => $filename) {
-			if(preg_match("/^_?[0-9]{4}.([0-9,|home|draft]*).[0-9]{3}.[0-9]{12}.".$_POST["url"].".xml$/", $filename)) {
+			if(preg_match("/^_?[0-9]{4}.([0-9,|home|draft]*).([0-9,|home|draft]*).[0-9]{3}.[0-9]{12}.".$_POST["url"].".xml$/", $filename)) {
 				if($numart!=str_replace('_', '',$_POST['artId'])) {
 					$valid = plxMsg::Error(L_ERR_URL_ALREADY_EXISTS." : ".plxUtils::strCheck($_POST["url"])) AND $valid;
 				}
@@ -129,6 +144,7 @@ if(!empty($_POST)) { # Création, mise à jour, suppression ou aperçu
 		# Si url ou date invalide, on ne sauvegarde pas mais on repasse en mode brouillon
 		}else{
 			array_unshift($_POST['catId'], 'draft');
+			array_unshift($_POST['typId'], 'draft');
 		}
 
 	}
@@ -140,11 +156,20 @@ if(!empty($_POST)) { # Création, mise à jour, suppression ou aperçu
 		$plxAdmin->getCategories(path('XMLFILE_CATEGORIES'));
 		$_GET['a']=$_POST['artId'];
 	}
+	# Ajout d'un type
+	if(isset($_POST['new_type'])) {
+		# Ajout du nouveau type
+		$plxAdmin->editTypes($_POST);
+		# On recharge la nouvelle liste
+		$plxAdmin->getTypes(path('XMLFILE_TYPES'));
+		$_GET['a']=$_POST['artId'];
+	}
 	# Alimentation des variables
 	$artId = $_POST['artId'];
 	$title = trim($_POST['title']);
 	$author = $_POST['author'];
 	$catId = isset($_POST['catId'])?$_POST['catId']:array();
+	$typId = isset($_POST['typId'])?$_POST['typId']:array();
 	$date['day'] = $_POST['date_publication_day'];
 	$date['month'] = $_POST['date_publication_month'];
 	$date['year'] = $_POST['date_publication_year'];
@@ -192,6 +217,7 @@ if(!empty($_POST)) { # Création, mise à jour, suppression ou aperçu
 	$date_update = plxDate::date2Array($result['date_update']);
 	$date_update_old = $result['date_update'];
 	$catId = explode(',', $result['categorie']);
+	$typId = explode(',', $result['type']);
 	$artId = $result['numero'];
 	$allow_com = $result['allow_com'];
 	$template = $result['template'];
@@ -221,6 +247,7 @@ if(!empty($_POST)) { # Création, mise à jour, suppression ou aperçu
 	$date_update = array ('year' => date('Y'),'month' => date('m'),'day' => date('d'),'time' => date('H:i'));
 	$date_update_old = '';
 	$catId = array('draft');
+	$typId = array('draft');
 	$artId = '0000';
 	$allow_com = $plxAdmin->aConf['allow_com'];
 	$template = 'article.php';
@@ -231,6 +258,7 @@ if(!empty($_POST)) { # Création, mise à jour, suppression ou aperçu
 	# Hook Plugins
 	eval($plxAdmin->plxPlugins->callHook('AdminArticleInitData'));
 }
+
 
 # On inclut le header
 include(dirname(__FILE__).'/top.php');
@@ -468,6 +496,7 @@ $cat_id='000';
 					</div>
 				</div>
 
+
 				<?php if($_SESSION['profil'] < PROFIL_WRITER) : ?>
 
 				<div class="grid">
@@ -476,6 +505,41 @@ $cat_id='000';
 						<div class="inline-form">
 							<?php plxUtils::printInput('new_catname','','text','17-50')	?>
 							<input type="submit" name="new_category" value="<?php echo L_CATEGORY_ADD_BUTTON ?>" />
+						</div>
+					</div>
+				</div>
+
+				<?php endif; ?>
+
+				<div class="grid">
+					<div class="col sml-12">
+						<label><?php echo L_ARTICLE_TYPES ?>&nbsp;:</label>
+						<?php
+//							$selected = (is_array($typId) AND in_array('000', $typId)) ? ' checked="checked"' : '';
+//							echo '<label for="typ_unclassified"><input class="no-margin" disabled="disabled" type="checkbox" id="typ_unclassified" name="typId[]"'.$selected.' value="000" />&nbsp;'. L_UNCLASSIFIED .'</label>';
+//							$selected = (is_array($typId) AND in_array('home', $typId)) ? ' checked="checked"' : '';
+//							echo '<label for="typ_home"><input type="checkbox" class="no-margin" id="typ_home" name="typId[]"'.$selected.' value="home" />&nbsp;'. L_TYPE_HOME_PAGE .'</label>';
+
+							foreach($plxAdmin->aTypes as $typ_id => $typ_name) {
+								$selected = (is_array($typId) AND in_array($typ_id, $typId)) ? ' checked="checked"' : '';
+								if($plxAdmin->aTypes[$typ_id]['active'])
+									echo '<label for="typ_'.$typ_id.'">'.'<input type="checkbox" class="no-margin" id="typ_'.$typ_id.'" name="typId[]"'.$selected.' value="'.$typ_id.'" />&nbsp;'.plxUtils::strCheck($typ_name['name']).'</label>';
+								else
+									echo '<label for="typ_'.$typ_id.'">'.'<input type="checkbox" class="no-margin" id="typ_'.$typ_id.'" name="typId[]"'.$selected.' value="'.$typ_id.'" />&nbsp;'.plxUtils::strCheck($typ_name['name']).'</label>';
+							}
+						?>
+					</div>
+				</div>
+
+
+				<?php if($_SESSION['profil'] < PROFIL_WRITER) : ?>
+
+				<div class="grid">
+					<div class="col sml-12">
+						<label for="id_new_typname"><?php echo L_NEW_TYPE ?>&nbsp;:</label>
+						<div class="inline-form">
+							<?php plxUtils::printInput('new_typname','','text','17-50')	?>
+							<input type="submit" name="new_type" value="<?php echo L_TYPE_ADD_BUTTON ?>" />
 						</div>
 					</div>
 				</div>

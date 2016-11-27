@@ -47,18 +47,22 @@ $mod='';
 switch ($_SESSION['sel_get']) {
 case 'published':
 	$catIdSel = '[home|0-9,]*FILTER[home|0-9,]*';
+	$typIdSel = '[home|0-9,]*FILTER[home|0-9,]*';
 	$mod='';
 	break;
 case 'draft':
 	$catIdSel = '[home|0-9,]*draft,FILTER[home|0-9,]*';
+	$typIdSel = '[home|0-9,]*draft,FILTER[home|0-9,]*';
 	$mod='_?';
 	break;
 case 'all':
 	$catIdSel = '[home|draft|0-9,]*FILTER[draft|home|0-9,]*';
+	$typIdSel = '[home|draft|0-9,]*FILTER[draft|home|0-9,]*';
 	$mod='_?';
 	break;
 case 'mod':
 	$catIdSel = '[home|draft|0-9,]*FILTER[draft|home|0-9,]*';
+	$typIdSel = '[home|draft|0-9,]*FILTER[draft|home|0-9,]*';
 	$mod='_';
 	break;
 }
@@ -74,6 +78,17 @@ case preg_match('/^[0-9]{3}$/', $_SESSION['sel_cat'])==1:
 	$catIdSel = str_replace('FILTER', $_SESSION['sel_cat'], $catIdSel);
 }
 
+switch ($_SESSION['sel_typ']) {
+case 'all' :
+	$typIdSel = str_replace('FILTER', '', $typIdSel); break;
+case '000' :
+	$typIdSel = str_replace('FILTER', '000', $typIdSel); break;
+case 'home':
+	$typIdSel = str_replace('FILTER', 'home', $typIdSel); break;
+case preg_match('/^[0-9]{3}$/', $_SESSION['sel_typ'])==1:
+	$typIdSel = str_replace('FILTER', $_SESSION['typ_cat'], $typIdSel);
+}
+
 # Nombre d'article sélectionnés
 $nbArtPagination = $plxAdmin->nbArticles($catIdSel, $userId);
 
@@ -85,7 +100,7 @@ if(empty($artTitle)) {
 $_GET['artTitle'] = $artTitle;
 
 # On génère notre motif de recherche
-$motif = '/^'.$mod.'[0-9]{4}.'.$catIdSel.'.'.$userId.'.[0-9]{12}.(.*)'.plxUtils::title2filename($_GET['artTitle']).'(.*).xml$/';
+$motif = '/^'.$mod.'[0-9]{4}.'.$catIdSel.'.'.$typIdSel.'.'.$userId.'.[0-9]{12}.(.*)'.plxUtils::title2filename($_GET['artTitle']).'(.*).xml$/';
 
 # Calcul du nombre de page si on fait une recherche
 if($_GET['artTitle']!='') {
@@ -112,6 +127,21 @@ if($plxAdmin->aCats) {
 $aAllCat[L_SPECIFIC_CATEGORIES_TABLE]['home'] = L_CATEGORY_HOME_PAGE;
 $aAllCat[L_SPECIFIC_CATEGORIES_TABLE]['draft'] = L_DRAFT;
 $aAllCat[L_SPECIFIC_CATEGORIES_TABLE][''] = L_ALL_ARTICLES_CATEGORIES_TABLE;
+
+# Génération de notre tableau des types
+$aFilterTyp['all'] = L_ARTICLES_ALL_TYPES;
+$aFilterTyp['home'] = L_TYPE_HOME;
+$aFilterTyp['000'] = L_UNCLASSIFIED;
+if($plxAdmin->aTypes) {
+	foreach($plxAdmin->aTypes as $k=>$v) {
+		$aTyp[$k] = plxUtils::strCheck($v['name']);
+		$aFilterTyp[$k] = plxUtils::strCheck($v['name']);
+	}
+	$aAllCat[L_TYPES_TABLE] = $aTyp;
+}
+$aAllCat[L_SPECIFIC_TYPES_TABLE]['home'] = L_TYPE_HOME_PAGE;
+$aAllCat[L_SPECIFIC_TYPES_TABLE]['draft'] = L_DRAFT;
+$aAllCat[L_SPECIFIC_TYPES_TABLE][''] = L_ALL_ARTICLES_TYPES_TABLE;
 
 # On inclut le header
 include(dirname(__FILE__).'/top.php');
@@ -160,6 +190,7 @@ include(dirname(__FILE__).'/top.php');
 				<th><?php echo L_ARTICLE_LIST_DATE ?></th>
 				<th><?php echo L_ARTICLE_LIST_TITLE ?></th>
 				<th><?php echo L_ARTICLE_LIST_CATEGORIES ?></th>
+				<th><?php echo L_ARTICLE_LIST_TYPES ?></th>
 				<th><?php echo L_ARTICLE_LIST_NBCOMS ?></th>
 				<th><?php echo L_ARTICLE_LIST_AUTHOR ?></th>
 				<th class="action"><?php echo L_ARTICLE_LIST_ACTION ?></th>
@@ -194,6 +225,25 @@ include(dirname(__FILE__).'/top.php');
 					}
 					else $libCats = L_UNCLASSIFIED;
 				}
+				# Types : liste des libellés de tous les types
+				$draft='';
+				$libTypes='';
+				$typIds = explode(',', $plxAdmin->plxRecord_arts->f('type'));
+				if(sizeof($typIds)>0) {
+					$typesName = array();
+					foreach($typIds as $typId) {
+						if($typId=='home') $typesName[] = L_TYPE_HOME;
+						elseif($typId=='draft') $draft= ' - <strong>'.L_CATEGORY_DRAFT.'</strong>';
+						elseif(!isset($plxAdmin->aTypes[$typId])) $typesName[] = L_UNCLASSIFIED;
+						else $typesName[] = plxUtils::strCheck($plxAdmin->aTypes[$typId]['name']);
+					}
+					if(sizeof($typesName)>0) {
+						$libTypes = $typesName[0];
+						unset($typesName[0]);
+						if(sizeof($typesName)>0) $libTypes .= ' <a class="folder"><span>'.implode(', ', $typesName).'</span></a>';
+					}
+					else $libTypes = L_UNCLASSIFIED;
+				}
 				# en attente de validation ?
 				$idArt = $plxAdmin->plxRecord_arts->f('numero');
 				$awaiting = $idArt[0]=='_' ? ' - <strong>'.L_AWAITING.'</strong>' : '';
@@ -207,6 +257,7 @@ include(dirname(__FILE__).'/top.php');
 				echo '<td>'.plxDate::formatDate($plxAdmin->plxRecord_arts->f('date')).'&nbsp;</td>';
 				echo '<td class="wrap"><a href="article.php?a='.$idArt.'" title="'.L_ARTICLE_EDIT_TITLE.'">'.plxUtils::strCheck($plxAdmin->plxRecord_arts->f('title')).'</a>'.$draft.$awaiting.'&nbsp;</td>';
 				echo '<td>'.$libCats.'&nbsp;</td>';
+				echo '<td>'.$libTypes.'&nbsp;</td>';
 				echo '<td><a title="'.L_NEW_COMMENTS_TITLE.'" href="comments.php?sel=offline&amp;a='.$plxAdmin->plxRecord_arts->f('numero').'&amp;page=1">'.$nbComsToValidate.'</a> / <a title="'.L_VALIDATED_COMMENTS_TITLE.'" href="comments.php?sel=online&amp;a='.$plxAdmin->plxRecord_arts->f('numero').'&amp;page=1">'.$nbComsValidated.'</a>&nbsp;</td>';
 				echo '<td>'.plxUtils::strCheck($author).'&nbsp;</td>';
 				echo '<td>';

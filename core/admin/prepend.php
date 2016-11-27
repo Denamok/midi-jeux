@@ -22,7 +22,6 @@ if(!defined('PLX_AUTHPAGE') OR PLX_AUTHPAGE !== true){ # si on est pas sur la pa
 		exit;
 	}
 }
-
 # On inclut les librairies nécessaires
 include_once(PLX_CORE.'lib/class.plx.date.php');
 include_once(PLX_CORE.'lib/class.plx.glob.php');

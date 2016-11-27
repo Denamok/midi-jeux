@@ -82,8 +82,10 @@
 						$menus[] = plxUtils::formatMenu(L_MENU_COMMENTS, PLX_CORE.'admin/comments.php?page=1', L_MENU_COMMENTS_TITLE, false, false, $coms_offline);
 					}
 
-					if($_SESSION['profil'] <= PROFIL_EDITOR)
+					if($_SESSION['profil'] <= PROFIL_EDITOR) {
 						$menus[] = plxUtils::formatMenu(L_MENU_CATEGORIES, PLX_CORE.'admin/categories.php', L_MENU_CATEGORIES_TITLE);
+						$menus[] = plxUtils::formatMenu(L_MENU_TYPES, PLX_CORE.'admin/types.php', L_MENU_TYPES_TITLE);
+                                        }
 
 					$menus[] = plxUtils::formatMenu(L_MENU_PROFIL, PLX_CORE.'admin/profil.php', L_MENU_PROFIL_TITLE);
 

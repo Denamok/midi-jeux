@@ -201,6 +201,11 @@ class plxShow {
 			$title = $title_htmltag !='' ? $title_htmltag : $this->plxMotor->aCats[$this->plxMotor->cible]['name'];
 			$subtitle = $this->plxMotor->aConf['title'];
 		}
+		elseif($this->plxMotor->mode == 'type') {
+			$title_htmltag = $this->plxMotor->aTypes[$this->plxMotor->cible ]['title_htmltag'];
+			$title = $title_htmltag !='' ? $title_htmltag : $this->plxMotor->aTypes[$this->plxMotor->cible]['name'];
+			$subtitle = $this->plxMotor->aConf['title'];
+		}
 		elseif($this->plxMotor->mode == 'article') {
 			$title_htmltag = $this->plxMotor->plxRecord_arts->f('title_htmltag');
 			$title = $title_htmltag !='' ? $title_htmltag : $this->plxMotor->plxRecord_arts->f('title');
@@ -291,6 +296,13 @@ class plxShow {
 				echo '<meta name="'.$meta.'" content="'.plxUtils::strCheck($this->plxMotor->aConf['meta_'.$meta]).'" />'."\n";
 			return;
 		}
+		if($this->plxMotor->mode == 'types') {
+			if(!empty($this->plxMotor->aTypes[ $this->plxMotor->cible ]['meta_'.$meta]))
+				echo '<meta name="'.$meta.'" content="'.plxUtils::strCheck($this->plxMotor->aTypes[ $this->plxMotor->cible ]['meta_'.$meta]).'" />'."\n";
+			elseif(!empty($this->plxMotor->aConf['meta_'.$meta]))
+				echo '<meta name="'.$meta.'" content="'.plxUtils::strCheck($this->plxMotor->aConf['meta_'.$meta]).'" />'."\n";
+			return;
+		}
 	}
 
 	/**
@@ -370,6 +382,53 @@ class plxShow {
 	}
 
 	/**
+	 * Méthode qui affiche la liste des types actifs.
+	 * Si la variable $extra est renseignée, un lien vers la
+	 * page d'accueil (nommé $extra) sera mis en place en première
+	 * position.
+	 *
+	 * @param	extra	nom du lien vers la page d'accueil
+	 * @param	format	format du texte pour chaque catégorie (variable : #cat_id, #cat_status, #cat_url, #cat_name, #art_nb)
+	 * @param	include	liste des catégories à afficher séparées par le caractère | (exemple: 001|003)
+	 * @param	exclude	liste des catégories à ne pas afficher séparées par le caractère | (exemple: 002|003)
+	 * @return	stdout
+	 * @scope	global
+	 * @author	Anthony GUÉRIN, Florent MONTHEL, Stephane F
+	 **/
+	public function typList($extra='', $format='<li id="#typ_id" class="#typ_status"><a href="#typ_url" title="#typ_name">#typ_name</a></li>', $include='', $exclude='') {
+		# Hook Plugins
+		if(eval($this->plxMotor->plxPlugins->callHook('plxShowLastTypList'))) return;
+
+		# Si on a la variable extra, on affiche un lien vers la page d'accueil (avec $extra comme nom)
+		if($extra != '') {
+			$name = str_replace('#typ_id','typ-home',$format);
+			$name = str_replace('#typ_url',$this->plxMotor->urlRewrite(),$name);
+			$name = str_replace('#typ_name',plxUtils::strCheck($extra),$name);
+			$name = str_replace('#typ_status',($this->typId()=='home'?'active':'noactive'), $name);
+			$name = str_replace('#art_nb','',$name);
+			echo $name;
+		}
+		# On verifie qu'il y a des categories
+		if($this->plxMotor->aTypes) {
+			foreach($this->plxMotor->aTypes as $k=>$v) {
+				$in = (empty($include) OR preg_match('/('.$include.')/', $k));
+				$ex = (!empty($exclude) AND preg_match('/('.$exclude.')/', $k));
+				if($in AND !$ex) {
+					if(($v['articles']>0 OR $this->plxMotor->aConf['display_empty_cat']) AND ($v['menu']=='oui') AND $v['active']) { # On a des articles
+						# On modifie nos motifs
+						$name = str_replace('#typ_id','typ-'.intval($k),$format);
+						$name = str_replace('#typ_url',$this->plxMotor->urlRewrite('?type'.intval($k).'/'.$v['url']),$name);
+						$name = str_replace('#typ_name',plxUtils::strCheck($v['name']),$name);
+						$name = str_replace('#typ_status',($this->typId()==intval($k)?'active':'noactive'), $name);
+						$name = str_replace('#art_nb',$v['coming'],$name);
+						echo $name;
+					}
+				}
+			} # Fin du while
+		}
+	}
+
+	/**
 	 * Méthode qui retourne l'id de la catégorie en question (sans les 0 supplémentaires)
 	 *
 	 * @return	int ou string
@@ -386,6 +445,26 @@ class plxShow {
 			return intval($this->plxMotor->plxRecord_arts->f('categorie'));
 		# On va vérifier si c'est la catégorie home
 		if($this->plxMotor->mode == 'categorie' OR $this->plxMotor->mode == 'home' OR $this->plxMotor->mode == 'article')
+			return 'home';
+	}
+
+	/**
+	 * Méthode qui retourne l'id du type en question (sans les 0 supplémentaires)
+	 *
+	 * @return	int ou string
+	 * @scope	home,categorie,article,tags,archives
+	 * @author	Florent MONTHEL
+	 **/
+	public function typId() {
+
+		# On va verifier que le type existe en mode categorie
+		if($this->plxMotor->mode == 'type' AND isset($this->plxMotor->aTypes[ $this->plxMotor->cible ]))
+			return intval($this->plxMotor->cible);
+		# On va verifier que le type existe en mode article
+		if($this->plxMotor->mode == 'article' AND isset($this->plxMotor->aTypes[ $this->plxMotor->plxRecord_arts->f('type') ]))
+			return intval($this->plxMotor->plxRecord_arts->f('type'));
+		# On va vérifier si c'est le type home
+		if($this->plxMotor->mode == 'type' OR $this->plxMotor->mode == 'home' OR $this->plxMotor->mode == 'article')
 			return 'home';
 	}
 
@@ -632,6 +711,21 @@ class plxShow {
 	}
 
 	/**
+	 * Méthode qui retourne un tableau contenant les numéros des catégories actives de l'article
+	 *
+	 * @return	array
+	 * @scope	home,categorie,article,tags,archives
+	 * @author	Stephane F
+	 **/
+	public function artActiveTypIds() {
+
+		$artTypIds = explode(',', $this->plxMotor->plxRecord_arts->f('type'));
+		$activeTypes = explode('|',$this->plxMotor->activeTypes);
+		return array_intersect($artTypIds,$activeTypes);
+
+	}
+
+	/**
 	 * Méthode qui affiche la liste des catégories l'article sous forme de lien
 	 * ou la chaîne de caractère 'Non classé' si la catégorie
 	 * de l'article n'existe pas
@@ -668,6 +762,45 @@ class plxShow {
 			}
 		}
 		echo implode($separator, $cats);
+	}
+
+	/**
+	 * Méthode qui affiche la liste des types l'article sous forme de lien
+	 * ou la chaîne de caractère 'Non classé' si la catégorie
+	 * de l'article n'existe pas
+	 *
+	 * @param	separator	caractère de séparation entre les catégories affichées
+	 * @return	stdout
+	 * @scope	home,categorie,article,tags,archives
+	 * @author	Anthony GUÉRIN, Florent MONTHEL, Stephane F
+	 **/
+	public function artTyp($separator=', ') {
+
+		$cats = array();
+		# Initialisation de notre variable interne
+		$typIds = $this->artActiveTypIds();
+		foreach ($typIds as $idx => $typId) {
+			# On verifie que la categorie n'est pas "home"
+			if($typId != 'home') {
+				# On va verifier que la categorie existe
+				if(isset($this->plxMotor->aTypes[ $typId ])) {
+					# On recupere les infos de la categorie
+					$name = plxUtils::strCheck($this->plxMotor->aTypes[ $typId ]['name']);
+					$url = $this->plxMotor->aCats[ $typId ]['url'];
+					if(isset($this->plxMotor->aTypes[ $this->plxMotor->cible ]['url']))
+						$active = $this->plxMotor->aTypes[ $this->plxMotor->cible ]['url']==$url?"active":"noactive";
+					else
+						$active = "noactive";
+					# On effectue l'affichage
+					$types[] = '<a class="'.$active.'" href="'.$this->plxMotor->urlRewrite('?type'.intval($typId).'/'.$url).'" title="'.$name.'">'.$name.'</a>';
+				} else { # La categorie n'existe pas
+					$types[] =  L_UNCLASSIFIED;
+				}
+			} else { # Categorie "home"
+				$types[] = '<a class="active" href="'.$this->plxMotor->urlRewrite().'" title="'.L_HOMEPAGE.'">'.L_HOMEPAGE.'</a>';
+			}
+		}
+		echo implode($separator, $types);
 	}
 
 	/**
@@ -912,9 +1045,9 @@ class plxShow {
 		if(eval($this->plxMotor->plxPlugins->callHook('plxShowLastArtList'))) return;
 		# Génération de notre motif
 		if(empty($cat_id))
-			$motif = '/^[0-9]{4}.(?:[0-9]|home|,)*(?:'.$this->plxMotor->activeCats.'|home)(?:[0-9]|home|,)*.[0-9]{3}.[0-9]{12}.[a-z0-9-]+.xml$/';
+			$motif = '/^[0-9]{4}.(?:[0-9]|home|,)*(?:'.$this->plxMotor->activeCats.'|home)(?:[0-9]|home|,)*.[0-9]{3}.0-9]{3}.[0-9]{12}.[a-z0-9-]+.xml$/';
 		else
-			$motif = '/^[0-9]{4}.((?:[0-9]|home|,)*(?:'.str_pad($cat_id,3,'0',STR_PAD_LEFT).')(?:[0-9]|home|,)*).[0-9]{3}.[0-9]{12}.[a-z0-9-]+.xml$/';
+			$motif = '/^[0-9]{4}.((?:[0-9]|home|,)*(?:'.str_pad($cat_id,3,'0',STR_PAD_LEFT).')(?:[0-9]|home|,)*).[0-9]{3}.0-9]{3}.[0-9]{12}.[a-z0-9-]+.xml$/';
 
 		# Nouvel objet plxGlob et récupération des fichiers
 		$plxGlob_arts = clone $this->plxMotor->plxGlob_arts;
@@ -1727,9 +1860,9 @@ class plxShow {
 
 		$plxGlob_arts = clone $this->plxMotor->plxGlob_arts;
 
-		if($files = $plxGlob_arts->query('/^[0-9]{4}.(?:[0-9]|home|,)*(?:'.$this->plxMotor->activeCats.'|home)(?:[0-9]|home|,)*.[0-9]{3}.[0-9]{12}.[a-z0-9-]+.xml$/','art','rsort',0,false,'before')) {
+		if($files = $plxGlob_arts->query('/^[0-9]{4}.(?:[0-9]|home|,)*(?:'.$this->plxMotor->activeCats.'|home)(?:[0-9]|home|,)*.[0-9]{3}.[0-9]{3}.[0-9]{12}.[a-z0-9-]+.xml$/','art','rsort',0,false,'before')) {
 			foreach($files as $id => $filename){
-				if(preg_match('/([0-9]{4}).((?:[0-9]|home|,)*(?:'.$this->plxMotor->activeCats.'|home)(?:[0-9]|home|,)*).[0-9]{3}.([0-9]{4})([0-9]{2})([0-9]{6}).([a-z0-9-]+).xml$/',$filename,$capture)){
+				if(preg_match('/([0-9]{4}).((?:[0-9]|home|,)*(?:'.$this->plxMotor->activeCats.'|home)(?:[0-9]|home|,)*).[0-9]{3}.[0-9]{3}.([0-9]{4})([0-9]{2})([0-9]{6}).([a-z0-9-]+).xml$/',$filename,$capture)){
 					if($capture[3]==$curYear) {
 						if(!isset($array[$capture[3]][$capture[4]])) $array[$capture[3]][$capture[4]]=1;
 						else $array[$capture[3]][$capture[4]]++;
