@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <document>
-	<title><![CDATA[T.I.M.E Stories - jeu de rôle - TEAM 2]]></title>
+	<title><![CDATA[T.I.M.E Stories - jeu de rôle - TEAM 1]]></title>
 	<allow_com>1</allow_com>
 	<template><![CDATA[article.php]]></template>
 	<chapo><![CDATA[]]></chapo>
@@ -9,7 +9,7 @@ ____________________________<br>
 Vivez un CODE QUANTUM moderne au travers du temps et de multiples réalités.
 Incarnez des personnages dans ce jeu qui mélange divers aspects du jeu de rôles et du jeu de plateau.
 <br><br>
-<u>Les parties sont sur inscriptions :</u> <br> 4 personnes par Team <br><a href="http://doodle.com/poll/gwiccsgepammn4834t8i62da/admin"><font color="red"><b>COMPLET</b></font></a> <br><i>si vous êtes intéressés pour participer à une autre team, contactez moi par mail : nmarsan@voyageprive.com</i>
+<u>Les parties sont sur inscriptions :</u> <br> 4 personnes par Team <br><a href="http://doodle.com/poll/gwiccsgepammn4834t8i62da/admin"><font color="red"><b>COMPLET</b></font></a> <br><i>si vous êtes intéressés, inscrivez vous via le formulaire ou contactez moi par mail : nmarsan@voyageprive.com</i>
 
 <br>
 <table align="right">
@@ -17,27 +17,24 @@ Incarnez des personnages dans ce jeu qui mélange divers aspects du jeu de rôle
 <tr><td>
 <u>Avancement TEAM 1 : </u>
 <ul><li>RUN :  2 </li>
-<li>Nombre de sessions :  4 </li>
-<li>Unité de Temps restant :  6 </li>
-<li>Object récupérés : 16 </li>
-<li>Lieux visités : 9 </li>
+<li>Unité de Temps restant :  14 </li>
+<li>Object récupérés : 8 </li>
+<li>Lieux visités : 6 </li>
 <li> Joueurs éliminés : 1 </i></ul>
 </td>
 
 <td>
 <u>Avancement TEAM 2 : </u>
 <ul><li>RUN :  1 </li>
-<li>Nombre de sessions :  2 </li>
-<li>Unité de Temps restant :  5 </li>
-<li>Object récupérés : 16 </li>
-<li>Lieux visités : 8 </li>
+<li>Unité de Temps restant :  15 </li>
+<li>Object récupérés : 7 </li>
+<li>Lieux visités : 4 </li>
 <li> Joueurs éliminés : 0 </i></ul>
 </td>
 
 <td>
 <u>Avancement TEAM 3 : </u>
 <ul><li>RUN :  0 </li>
-<li>Nombre de sessions :  0 </li>
 <li>Unité de Temps restant :  25 </li>
 <li>Object récupérés : 0 </li>
 <li>Lieux visités : 0 </li>
@@ -51,6 +48,6 @@ Incarnez des personnages dans ce jeu qui mélange divers aspects du jeu de rôle
 	<thumbnail><![CDATA[data/medias/time-stories2.tb.jpg]]></thumbnail>
 	<thumbnail_alt><![CDATA[]]></thumbnail_alt>
 	<thumbnail_title><![CDATA[]]></thumbnail_title>
-	<date_creation><![CDATA[201611231717]]></date_creation>
-	<date_update><![CDATA[201611251701]]></date_update>
+	<date_creation><![CDATA[201611161415]]></date_creation>
+	<date_update><![CDATA[201611281011]]></date_update>
 </document>
