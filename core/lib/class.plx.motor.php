@@ -136,6 +136,7 @@ class plxMotor {
 			$this->mode = 'home';
 			$this->template = $this->aConf['hometemplate'];
 			$this->bypage = $this->aConf['bypage']; # Nombre d'article par page
+
 			# On regarde si on a des articles en mode "home"
 			if($this->plxGlob_arts->query('/^[0-9]{4}.(home[0-9,]*).[0-9]{3}.[0-9]{3}.[0-9]{12}.[a-z0-9-]+.xml$/')) {
 				$this->motif = '/^[0-9]{4}.(home[0-9,]*).[0-9]{3}.[0-9]{3}.[0-9]{12}.[a-z0-9-]+.xml$/';
@@ -717,12 +718,20 @@ class plxMotor {
 			$maxDate = "999999999999";
 			$maxK = "";
 			$maxArt = "";
+			$nbTypes = 0;
+			if ($this->mode == 'type'){
+				foreach($aFiles as $k=>$v){ # On parcourt tous les fichiers
+					$art = $this->parseArticle(PLX_ROOT.$this->aConf['racine_articles'].$v);
+					if ($art['date_creation'] >= date('YmdHi')) $nbTypes++;
+				}
+			}
 			foreach($aFiles as $k=>$v){ # On parcourt tous les fichiers
 				$art = $this->parseArticle(PLX_ROOT.$this->aConf['racine_articles'].$v);
 				if ($this->mode == 'type'){
 					if ($art['date_creation'] < date('YmdHi')) continue;
+					$array[$k - (sizeof($aFiles) - $nbTypes)] = $art;
 				}
-				if ($this->mode == 'home'){
+				elseif ($this->mode == 'home'){
 					if ($art['date_creation'] >= date('YmdHi')){
 
 						if ($art['date_creation'] <= $maxDate){
