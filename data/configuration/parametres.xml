@@ -11,7 +11,7 @@
 	<parametre name="capcha">1</parametre>
 	<parametre name="style"><![CDATA[defaut]]></parametre>
 	<parametre name="clef"><![CDATA[YAEJz2ghZKdmrAh]]></parametre>
-	<parametre name="bypage">1</parametre>
+	<parametre name="bypage">99</parametre>
 	<parametre name="bypage_archives">5</parametre>
 	<parametre name="bypage_admin">10</parametre>
 	<parametre name="bypage_admin_coms">10</parametre>

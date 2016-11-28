@@ -714,13 +714,30 @@ class plxMotor {
 		# On recupere nos fichiers (tries) selon le motif, la pagination, la date de publication
 		if($aFiles = $this->plxGlob_arts->query($this->motif,'art',$ordre,$start,$this->bypage,$publi)) {
 			# on mémorise le nombre total d'articles trouvés
+			$maxDate = "999999999999";
+			$maxK = "";
+			$maxArt = "";
 			foreach($aFiles as $k=>$v){ # On parcourt tous les fichiers
 				$art = $this->parseArticle(PLX_ROOT.$this->aConf['racine_articles'].$v);
 				if ($this->mode == 'type'){
 					if ($art['date_creation'] < date('YmdHi')) continue;
 				}
-				$array[$k] = $art;
+				if ($this->mode == 'home'){
+					if ($art['date_creation'] >= date('YmdHi')){
+
+						if ($art['date_creation'] <= $maxDate){
+        	                                	$maxDate = $art['date_creation'];
+							$maxK = $k;
+							$maxArt = $art;
+						}
+	                                }
+				} else {
+					$array[$k] = $art;
+				}
 			}
+			if ($this->mode == 'home'){
+				$array[0] = $maxArt;
+			}		
 			# On stocke les enregistrements dans un objet plxRecord
 			$this->plxRecord_arts = new plxRecord($array);
 			if (sizeof($array)) return true;
