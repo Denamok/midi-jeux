@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<document>
+	<title><![CDATA[Colt Express - jeu de plateau]]></title>
+	<allow_com>1</allow_com>
+	<template><![CDATA[article.php]]></template>
+	<chapo><![CDATA[]]></chapo>
+	<content><![CDATA[<b>Incarnez des bandits “desperados” prêts à attaquer un train de voyageurs</b><br><br>
+Leur but :  devenir le hors-la-loi le plus riche de l’Ouest en dérobant les plus précieux butins et en blessant ses adversaires.
+<br><br>
+<u>Mécaniques de jeu</u><br>
+les bandits se déplacent d’un wagon à l’autre, ou de l’intérieur d’un wagon vers le toit dans un train en 3D. Chaque joueur planifie son action à l'avance et tente d'anticiper les mouvements de ses adversaires...
+
+<table align="right"><tr><td>
+<font color="grey">Pour participer, présentez vous en salle Tech City à 13h00, <font color="red"> INSCRIVEZ VOUS en ajoutant un commentaire à cet article</font></u>
+Il n'est pas nécessaire d'être un joueur avéré ou de connaitre les règles , on s'occupe de tout.</font>
+</td></tr></table>]]></content>
+	<tags><![CDATA[4-6 joueurs]]></tags>
+	<meta_description><![CDATA[]]></meta_description>
+	<meta_keywords><![CDATA[]]></meta_keywords>
+	<title_htmltag><![CDATA[]]></title_htmltag>
+	<thumbnail><![CDATA[data/medias/colt-express.tb.jpg]]></thumbnail>
+	<thumbnail_alt><![CDATA[]]></thumbnail_alt>
+	<thumbnail_title><![CDATA[]]></thumbnail_title>
+	<date_creation><![CDATA[201612071300]]></date_creation>
+	<date_update><![CDATA[201612051737]]></date_update>
+</document>

@@ -4,7 +4,7 @@
 	<allow_com>1</allow_com>
 	<template><![CDATA[article.php]]></template>
 	<chapo><![CDATA[]]></chapo>
-	<content><![CDATA["La TEAM 3 en force !" 
+	<content><![CDATA["Dernière partie pour la TEAM 3" 
 <br>________________________________________<br>
 Vivez un CODE QUANTUM moderne au travers du temps et de multiples réalités.
 Incarnez des personnages dans ce jeu qui mélange divers aspects du jeu de rôles et du jeu de plateau.
@@ -37,11 +37,11 @@ Incarnez des personnages dans ce jeu qui mélange divers aspects du jeu de rôle
 
 <td valign="top">
 <u>Avancement TEAM 3 : </u>
-<ul><li>RUN :  1 </li>
-<li>Nombre de sessions :  2 </li>
-<li>Unité de Temps restant :  0 </li>
-<li>Object récupérés : 16 </li>
-<li>Lieux visités : 8 </li>
+<ul><li>RUN :  2 </li>
+<li>Nombre de sessions :  3 </li>
+<li>Unité de Temps restant :  15 </li>
+<li>Object récupérés : 14 </li>
+<li>Lieux visités : 7 </li>
 <li> Joueurs éliminés : 0 </i></ul>
 
 </td></tr></table>]]></content>
@@ -49,9 +49,9 @@ Incarnez des personnages dans ce jeu qui mélange divers aspects du jeu de rôle
 	<meta_description><![CDATA[]]></meta_description>
 	<meta_keywords><![CDATA[]]></meta_keywords>
 	<title_htmltag><![CDATA[]]></title_htmltag>
-	<thumbnail><![CDATA[data/medias/time-stories5.tb.jpg]]></thumbnail>
+	<thumbnail><![CDATA[data/medias/time-stories2.tb.jpg]]></thumbnail>
 	<thumbnail_alt><![CDATA[]]></thumbnail_alt>
 	<thumbnail_title><![CDATA[]]></thumbnail_title>
-	<date_creation><![CDATA[201612051300]]></date_creation>
-	<date_update><![CDATA[201611301423]]></date_update>
+	<date_creation><![CDATA[201612201300]]></date_creation>
+	<date_update><![CDATA[201612121413]]></date_update>
 </document>
