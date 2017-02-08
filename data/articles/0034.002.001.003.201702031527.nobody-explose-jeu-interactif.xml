@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<document>
+	<title><![CDATA[La Bombe - Keep Talking and Nobody Explose]]></title>
+	<allow_com>1</allow_com>
+	<template><![CDATA[article.php]]></template>
+	<chapo><![CDATA[]]></chapo>
+	<content><![CDATA[Je vous propose cette fois ci , quelque chose d'un peu plus original, un jeu interactif et collaboratif
+<br><br>
+<u>Déminez la bombe!</u><br>
+Un joueur devra manipuler une bombe pendant que ces coéquipier devront trouver comment la déminer<br><br>
+Attention a ne pas couper le mauvais fil...
+
+<table align="right"><tr><td>
+<font color="grey">Pour participer, présentez vous en salle Tech City à 13h00, aucune inscription n'est nécessaire, et de ce fait, <u>les jeux proposés lors de ces sessions peuvent changer en fonction du choix et du nombre de participant.</u>
+Il n'est pas nécessaire d'être un joueur avéré ou de connaitre les règles , on s'occupe de tout.</font>
+</td></tr></table>]]></content>
+	<tags><![CDATA[2 - 100 joueurs]]></tags>
+	<meta_description><![CDATA[]]></meta_description>
+	<meta_keywords><![CDATA[]]></meta_keywords>
+	<title_htmltag><![CDATA[]]></title_htmltag>
+	<thumbnail><![CDATA[data/medias/bomb.tb.jpg]]></thumbnail>
+	<thumbnail_alt><![CDATA[]]></thumbnail_alt>
+	<thumbnail_title><![CDATA[]]></thumbnail_title>
+	<date_creation><![CDATA[201702081310]]></date_creation>
+	<date_update><![CDATA[201702031754]]></date_update>
+</document>

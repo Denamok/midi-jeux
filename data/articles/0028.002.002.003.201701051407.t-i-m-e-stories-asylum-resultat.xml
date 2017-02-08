@@ -1,28 +1,27 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <document>
-	<title><![CDATA[T.I.M.E Stories - jeu de rôle - TEAM 1]]></title>
+	<title><![CDATA[T.I.M.E Stories -  Asylum - Resultat]]></title>
 	<allow_com>1</allow_com>
 	<template><![CDATA[article.php]]></template>
 	<chapo><![CDATA[]]></chapo>
-	<content><![CDATA[<font color="#C23218"><b>"La TEAM 1, gagne le prix de l'équipe la plus atypique de l'année 2016, pour une version sanglante de T.I.M.E Stories" </font></b>
+	<content><![CDATA[<font color="#C23218"><b>FIN DU JEU</font></b>
+<br>
+Après plusieurs mois de suspense , toutes les équipes ont maintenant fini leur mission, leurs technique était différente, mais toutes ont réussi à résoudre les énigme et empecher la faille temporelle.<br>
+<font color="#C23218""><b>Je vous propose un petit repas lundi ou mardi prochain pour débattre de vos prestations tous ensemble!</b></font>
 <br><br>
-Vivez un CODE QUANTUM moderne au travers du temps et de multiples réalités.
-Incarnez des personnages dans ce jeu qui mélange divers aspects du jeu de rôles et du jeu de plateau.
-<br><br>
-<u>Les parties sont sur inscriptions :</u> <br> 4 personnes par Team <br><a href="http://doodle.com/poll/gwiccsgepammn4834t8i62da/admin"><font color="#C23218""><b>COMPLET</b></font></a>: <i>vous souhaitez monter une nouvelle team, contactez moi par mail :<br> <b>midi-jeux@voyageprive.com</b></i>
+Si vous souhaitez vous inscrire pour une nouvelle partie: <i> <b>contactez nous par mail :<br> midi-jeux@voyageprive.com</b></i>
 
 <br>
-
 <table align="right">
 
 <tr><td valign="top">
 <u>Avancement TEAM 1 : </u>
 <ul><li>RUN :  3 </li>
-<li>Nombre de sessions :  5 </li>
-<li>Unité de Temps restant :  20 </li>
-<li>Object récupérés : 10 </li>
-<li>Lieux visités : 6 </li>
+<li>Nombre de sessions :  6  </li>
+<li>Unité de Temps restant :  11 </li>
 <li> Joueurs éliminés : 1 </i></ul>
+<br>
+<b><font color="blue">--- MISSION REUSSIE score :  31 ---</font></b>
 </td>
 
 <td valign="top">
@@ -44,13 +43,13 @@ Incarnez des personnages dans ce jeu qui mélange divers aspects du jeu de rôle
 <br>
 <b><font color="blue">--- MISSION REUSSIE score : 40 ---</font></b>
 </td></tr></table>]]></content>
-	<tags><![CDATA[4 joueurs]]></tags>
+	<tags><![CDATA[]]></tags>
 	<meta_description><![CDATA[]]></meta_description>
 	<meta_keywords><![CDATA[]]></meta_keywords>
 	<title_htmltag><![CDATA[]]></title_htmltag>
-	<thumbnail><![CDATA[data/medias/time-stories-sang.tb.jpg]]></thumbnail>
+	<thumbnail><![CDATA[data/medias/podium.tb.jpg]]></thumbnail>
 	<thumbnail_alt><![CDATA[]]></thumbnail_alt>
 	<thumbnail_title><![CDATA[]]></thumbnail_title>
-	<date_creation><![CDATA[201701051300]]></date_creation>
-	<date_update><![CDATA[201612231115]]></date_update>
+	<date_creation><![CDATA[201701061407]]></date_creation>
+	<date_update><![CDATA[201701230933]]></date_update>
 </document>

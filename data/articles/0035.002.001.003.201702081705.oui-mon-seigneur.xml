@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<document>
+	<title><![CDATA[Oui, mon Seigneur]]></title>
+	<allow_com>1</allow_com>
+	<template><![CDATA[article.php]]></template>
+	<chapo><![CDATA[]]></chapo>
+	<content><![CDATA[<font color="orange"><b>Racontez des bobards ! Rejetez la faute sur vos petits camarades !</b><br></font>
+ Et surtout, échappez au courroux du Seigneur des Ténèbres! Après une énième mission ratée, vous et vos amis goblins revenez une fois de plus bredouilles. Son Excellence Rigor Mortis sera sans doute très désappointé...
+<br><br>
+
+Un jeu de bluff aux règles absurdes ! Il n'y a qu'un seul perdant , celui qui n'aura pas su renvoyer la faute sur son voisin.
+<br><br>
+<table align="right"><tr><td>
+<font color="grey">Pour participer, présentez vous en salle Tech City à 13h00, aucune inscription n'est nécessaire, et de ce fait, <u>les jeux proposés lors de ces sessions peuvent changer en fonction du choix et du nombre de participant.</u>
+Il n'est pas nécessaire d'être un joueur avéré ou de connaitre les règles , on s'occupe de tout.</font>
+</td></tr></table>]]></content>
+	<tags><![CDATA[3-10 joueurs]]></tags>
+	<meta_description><![CDATA[]]></meta_description>
+	<meta_keywords><![CDATA[]]></meta_keywords>
+	<title_htmltag><![CDATA[]]></title_htmltag>
+	<thumbnail><![CDATA[data/medias/rigor-mortis.tb.jpg]]></thumbnail>
+	<thumbnail_alt><![CDATA[]]></thumbnail_alt>
+	<thumbnail_title><![CDATA[]]></thumbnail_title>
+	<date_creation><![CDATA[201702151300]]></date_creation>
+	<date_update><![CDATA[201702081712]]></date_update>
+</document>

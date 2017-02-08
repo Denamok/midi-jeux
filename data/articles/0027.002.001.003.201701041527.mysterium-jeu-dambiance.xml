@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<document>
+	<title><![CDATA[Mysterium - jeu d’ambiance]]></title>
+	<allow_com>1</allow_com>
+	<template><![CDATA[article.php]]></template>
+	<chapo><![CDATA[]]></chapo>
+	<content><![CDATA[Dans les années 20, M. MacDowell, brillant astrologue clairvoyant pénètre dans sa nouvelle demeure lorsqu’il ressent immédiatement une présence surnaturelle. Il décide alors de rassembler les plus éminents médiums de son temps pour une séance de spiritisme exceptionnelle. Ils auront 7 heures pour entrer en contact avec le fantôme et résoudre un très ancien mystère…<br><br>
+
+<b>Mysterium est un jeu d’enquête coopératif </b>. Tous les joueurs sont unis dans un même but : découvrir la vérité sur la mort du fantôme qui hante le manoir et lui apporter la paix !
+
+<br><br>
+<font color="#2190A4">Entrez, prenez un siège et laissez vous guider par votre sixième sens...</font>
+
+
+
+<table align="right"><tr><td>
+<font color="grey">Pour participer, présentez vous en salle Tech City à 13h00, aucune inscription n'est nécessaire, et de ce fait, <u>les jeux proposés lors de ces sessions peuvent changer en fonction du choix et du nombre de participant.</u>
+Il n'est pas nécessaire d'être un joueur avéré ou de connaitre les règles , on s'occupe de tout.</font>
+</td></tr></table>]]></content>
+	<tags><![CDATA[3-7 joueurs]]></tags>
+	<meta_description><![CDATA[]]></meta_description>
+	<meta_keywords><![CDATA[]]></meta_keywords>
+	<title_htmltag><![CDATA[]]></title_htmltag>
+	<thumbnail><![CDATA[data/medias/mysterium.tb.jpg]]></thumbnail>
+	<thumbnail_alt><![CDATA[]]></thumbnail_alt>
+	<thumbnail_title><![CDATA[]]></thumbnail_title>
+	<date_creation><![CDATA[201701251300]]></date_creation>
+	<date_update><![CDATA[201701251438]]></date_update>
+</document>
