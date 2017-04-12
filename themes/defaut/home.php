@@ -5,14 +5,14 @@
 
                 <!-- post -->
 		<?php while($plxShow->plxMotor->plxRecord_arts->loop()): # On boucle sur les articles ?>
-                <div class="post clearfix">
+                    <div class="post clearfix">
 			<h2 class="title"><?php $plxShow->artTitle('link'); ?></h2>
 
-                  <div class="post-date">
-                    <p class="day"><?php $plxShow->artCreationDate('#day #num_day #month #num_year(4)'); ?></p>
-                  </div>
+                        <div class="post-date">
+                             <p class="day"><?php $plxShow->artCreationDate('#day #num_day #month #num_year(4)'); ?></p>
+                        </div>
 
-                  <div class="post-info clearfix with-thumbs">
+                         <div class="post-info clearfix with-thumbs">
                     <p class="author alignleft">
                        <?php $plxShow->artTyp('|'); echo " |"; ?> 
                     </p>
@@ -35,8 +35,11 @@
                   </div>
 
                 </div>
-                <!-- /post -->
-		<?php endwhile; # Fin de la boucle sur les articles ?>
+
+ 		<?php endwhile; # Fin de la boucle sur les articles ?>
+               <!-- /post -->
+
+
 		<?php # On affiche la pagination ?>
                         <!--p class="pagination">
                           <?php $plxShow->pagination(); ?>

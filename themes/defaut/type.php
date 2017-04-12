@@ -5,6 +5,8 @@
 
                 <!-- post -->
 		<?php while($plxShow->plxMotor->plxRecord_arts->loop()): # On boucle sur les articles ?>
+
+<?php if ($plxShow->artId() != 0): ?>
                 <div class="post clearfix">
 			<h2 class="title"><?php $plxShow->artTitle('link'); ?></h2>
                   <div class="post-date">
@@ -30,10 +32,11 @@
                   <p><?php $plxShow->artChapo(); ?></p>
                   </div>
 
-
                 </div>
-                <!-- /post -->
+<?php endif; ?>
+
 		<?php endwhile; # Fin de la boucle sur les articles ?>
+                <!-- /post -->
 		<?php # On affiche la pagination ?>
                         <p class="pagination">
                           <?php $plxShow->pagination(); ?>

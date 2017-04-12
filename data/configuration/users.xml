@@ -27,4 +27,13 @@
 		<email><![CDATA[]]></email>
 		<lang><![CDATA[fr]]></lang>
 	</user>
+	<user number="004" active="1" profil="0" delete="0">
+		<login><![CDATA[cjimenez]]></login>
+		<name><![CDATA[Cédric Jimenez]]></name>
+		<infos><![CDATA[]]></infos>
+		<password><![CDATA[bac36cb9fc6ffd266d76ed288dd9fd4325824271]]></password>
+		<salt><![CDATA[xubrSLWmWX]]></salt>
+		<email><![CDATA[]]></email>
+		<lang><![CDATA[fr]]></lang>
+	</user>
 </document>
