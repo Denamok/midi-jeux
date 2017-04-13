@@ -13,7 +13,7 @@
 	<parametre name="clef"><![CDATA[YAEJz2ghZKdmrAh]]></parametre>
 	<parametre name="bypage">99</parametre>
 	<parametre name="bypage_archives">5</parametre>
-	<parametre name="bypage_admin">10</parametre>
+	<parametre name="bypage_admin">20</parametre>
 	<parametre name="bypage_admin_coms">10</parametre>
 	<parametre name="bypage_feed">8</parametre>
 	<parametre name="tri"><![CDATA[desc]]></parametre>

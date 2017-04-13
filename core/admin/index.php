@@ -91,6 +91,7 @@ case preg_match('/^[0-9]{3}$/', $_SESSION['sel_typ'])==1:
 
 # Nombre d'article sélectionnés
 $nbArtPagination = $plxAdmin->nbArticles($catIdSel, $userId);
+$nbArtPagination=100;
 
 # Récupération du texte à rechercher
 $artTitle = (!empty($_GET['artTitle']))?plxUtils::unSlash(trim(urldecode($_GET['artTitle']))):'';
@@ -205,7 +206,7 @@ include(dirname(__FILE__).'/top.php');
 			$datetime = date('YmdHi');
 			while($plxAdmin->plxRecord_arts->loop()) { # Pour chaque article
 				$author = plxUtils::getValue($plxAdmin->aUsers[$plxAdmin->plxRecord_arts->f('author')]['name']);
-				$publi =  (boolean)!($plxAdmin->plxRecord_arts->f('date') > $datetime);
+				$publi =  (boolean)!($plxAdmin->plxRecord_arts->f('date_creation') > $datetime);
 				# Catégories : liste des libellés de toutes les categories
 				$draft='';
 				$libCats='';
@@ -254,7 +255,7 @@ include(dirname(__FILE__).'/top.php');
 				echo '<tr>';
 				echo '<td><input type="checkbox" name="idArt[]" value="'.$idArt.'" /></td>';
 				echo '<td>'.$idArt.'</td>';
-				echo '<td>'.plxDate::formatDate($plxAdmin->plxRecord_arts->f('date')).'&nbsp;</td>';
+				echo '<td>'.plxDate::formatDate($plxAdmin->plxRecord_arts->f('date_creation')).'&nbsp;</td>';
 				echo '<td class="wrap"><a href="article.php?a='.$idArt.'" title="'.L_ARTICLE_EDIT_TITLE.'">'.plxUtils::strCheck($plxAdmin->plxRecord_arts->f('title')).'</a>'.$draft.$awaiting.'&nbsp;</td>';
 				echo '<td>'.$libCats.'&nbsp;</td>';
 				echo '<td>'.$libTypes.'&nbsp;</td>';
